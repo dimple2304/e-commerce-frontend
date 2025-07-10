@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .inputBoxes {
+            display: none;
+        }
+
+        #cancelBtn {
+            display: none;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: auto auto auto auto auto;
+        }
+
+        .flexclass {
+            border: 2px dotted green;
+            /* display: flex; */
+            flex-direction: column;
+            padding: 10px;
+            margin: 10px 10px 0px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="logout">Log out</button><br><br>
+
+    <div class="inputBoxes">
+        Name: <input type="text" id="name">
+        Quantity: <input type="text" id="quantity" />
+        Price: <input type="text" id="price" />
+        Description: <input type="text" id="description" />
+    </div>
+
+
+
+    <div class="button-group">
+        <button id="addbtn">Add</button>
+        <button id="cancelBtn">Cancel</button>
+    </div>
+
+    <!-- <button id="totalbill">Total Bill</button> -->
+
+    <div class="container"></div>
+
+    <div class="totalbillMsg"></div>
+
+
+    <script src="products.js"></script>
+</body>
+
+</html>

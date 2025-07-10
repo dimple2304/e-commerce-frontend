@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        form{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="signinBtn">Sign in</button>
+    <button id="loginBtn">Login</button>
+    <form id="signinForm" action="">
+        <label for="newUsername">Username:</label>
+        <input type="text" id="newUsername" placeholder="Enter your username" required /><br><br>
+        <label for="newEmail">Email:</label>
+        <input type="text" id="newEmail" placeholder="Enter your email" required /><br><br>
+        <label for="newPassword">Password:</label>
+        <input type="text" id="newPassword" placeholder="Enter a strong password" required /><br><br>
+
+        <input type="checkbox" id="checkbox">Register as an admin <br><br>
+
+        <button id="signup">Sign up</button>
+    </form>
+
+    <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="text" id="email" placeholder="Enter your email" required /><br><br>
+        <label for="password">Password:</label>
+        <input type="text" id="password" placeholder="Enter password" required /><br><br>
+
+        <button id="login">Log in</button>
+    </form>
+
+
+
+
+
+    <script src="script.js"></script>
+</body>
+
+</html>

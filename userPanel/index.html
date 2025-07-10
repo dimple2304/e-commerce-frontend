@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container,
+        .cartContainer {
+            display: grid;
+            grid-template-columns: auto auto auto auto auto;
+            column-gap: 10px;
+            margin: 20px;
+        }
+
+        .cart,
+        .userCart {
+            border: 2px dashed blue;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 240px;
+        }
+
+        .prevNextBtns {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            column-gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="logoutBtn">Logout</button>
+    <h2 id="welcome"></h2>
+
+    <h3>Products</h3>
+    <div class="container" id="userContainer"></div><br><br>
+
+    <div class="prevNextBtns">
+        <button id="previousBtn">Prevoius</button>
+        <p class="pageno"></p>
+        <button id="nextBtn">Next</button>
+    </div>
+
+    <h2 id="myCartHeading">My cart:</h2>
+    <div class="cartContainer"></div>
+
+
+    <script src="user.js"></script>
+</body>
+
+</html>
