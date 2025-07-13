@@ -25,7 +25,7 @@ logoutBtn.addEventListener("click", function () {
 });
 
 let array = [];
-const itemsPerPage = 5;
+const itemsPerPage = 10;
 let currentPage = 1;
 
 window.onload = () => {
@@ -255,4 +255,17 @@ function syncliveUserCartsToDetails() {
         localStorage.setItem("details", JSON.stringify(details));
     }
 }
+
+
+
+window.addEventListener("storage", (e) => {
+  if (e.key === "liveUser" && e.newValue === null) {
+    window.location.href = "/";
+  }
+
+  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+    location.reload();
+  }
+});
+
 

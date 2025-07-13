@@ -14,6 +14,15 @@ let checkbox = document.querySelector("#checkbox");
 let email = document.querySelector("#email");
 let password = document.querySelector("#password");
 
+let usernameError = document.querySelector("#usernameError");
+let emailError = document.querySelector("#emailError");
+let passwordError = document.querySelector("#passwordError");
+
+
+let loginEmailError = document.querySelector("#loginEmailError");
+let loginPasswordError = document.querySelector("#loginPasswordError");
+
+
 
 signinBtn.addEventListener("click", function () {
     signinForm.style.display = 'block';
@@ -24,7 +33,6 @@ loginBtn.addEventListener("click", function () {
     loginForm.style.display = 'block';
 })
 
-
 let details = [];
 let id = 1;
 
@@ -32,13 +40,51 @@ signup.addEventListener("click", signupHandler);
 function signupHandler(event) {
     event.preventDefault();
 
-    let newUsernameVal = newUsername.value;
-    let newEmailVal = newEmail.value;
+    let newUsernameVal = newUsername.value.trim();
+    let newEmailVal = newEmail.value.trim();
     let newPasswordVal = newPassword.value;
+
+    // Clear previous error messages
+    usernameError.innerText = "";
+    emailError.innerText = "";
+    passwordError.innerText = "";
+
+    let hasError = false;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$/;
+
+    if (!newUsernameVal) {
+        usernameError.innerText = "Username is required!";
+        hasError = true;
+    }
+
+    if (!newEmailVal) {
+        emailError.innerText = "Email is required!";
+        hasError = true;
+    } else if (!emailPattern.test(newEmailVal)) {
+        emailError.innerText = "Enter a valid email!";
+        hasError = true;
+    }
+
+    if (!newPasswordVal.trim()) {
+        passwordError.innerText = "Password is required!";
+        hasError = true;
+    } else if (!passwordPattern.test(newPasswordVal)) {
+        passwordError.innerHTML =
+            `Password must contain at least 
+            <br>1 uppercase, 
+            <br>1 lowercase, 
+            <br>1 digit, 
+            <br>1 special character, 
+            <br>and be at least 5 characters.`;
+        hasError = true;
+    }
+
+    if (hasError) return;
 
     let detailsItems = {
         id: id++, isAdmin: "No", username: newUsernameVal, email: newEmailVal, password: newPasswordVal,
-        liveUserCarts: [], itemsBought:[],
+        liveUserCarts: [], itemsBought: [],
     };
 
     detailsItems.isAdmin = checkbox.checked ? "Yes" : "No";
@@ -54,7 +100,6 @@ function signupHandler(event) {
     newEmail.value = '';
     newPassword.value = '';
     checkbox.checked = false;
-
 }
 
 login.addEventListener("click", loginHandler);
@@ -63,8 +108,35 @@ let liveUser = [];
 function loginHandler(event) {
     event.preventDefault();
 
-    let emailVal = email.value;
+    let emailVal = email.value.trim();
     let passwordVal = password.value;
+
+    // Clear previous login error messages
+    loginEmailError.innerText = "";
+    loginPasswordError.innerText = "";
+
+    let hasError = false;
+
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailVal) {
+        loginEmailErrorinnerText = "Email is required!";
+        hasError = true;
+    } else if (!emailPattern.test(emailVal)) {
+        loginEmailError.innerText = "Enter a valid email!";
+        hasError = true;
+    } else {
+        loginEmailError.innerText = "";
+    }
+
+    if (!passwordVal.trim()) {
+        loginPasswordError.innerText = "Password is required!";
+        hasError = true;
+    } else {
+        loginPasswordError.innerText = "";
+    }
+
+    if (hasError) return;
 
     details = JSON.parse(localStorage.getItem("details")) || [];
 
@@ -73,13 +145,14 @@ function loginHandler(event) {
     });
     console.log(user);
 
+    if (!user && !hasError) {
+        loginPasswordError.innerText = "Incorrect email or password!";
+    }
 
     if (user) {
         if (user.isAdmin == "Yes") {
             window.location.href = "adminPanel/products.html";
-            // window.alert("Login successful");
-        }
-        else {
+        } else {
             let liveUserDetails = {
                 id: user.id, username: user.username, email: user.email, password: user.password,
                 liveUserCarts: user.liveUserCarts || [], itemsBought: user.itemsBought || []
@@ -87,12 +160,9 @@ function loginHandler(event) {
 
             localStorage.setItem("liveUser", JSON.stringify(liveUserDetails));
             window.location.href = "userPanel/index.html";
-            // localStorage.setItem("liveUser", JSON.stringify(liveUser));
         }
     }
-    else {
-        console.log("invalid details");
-    }
+
     email.value = "";
     password.value = "";
 }
@@ -122,3 +192,14 @@ if (liveUser) {
         window.location.href = "userPanel/index.html";
     }
 }
+
+
+window.addEventListener("storage", (e) => {
+  if (e.key === "liveUser" && e.newValue === null) {
+    window.location.href = "/";
+  }
+
+  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+    location.reload();
+  }
+});

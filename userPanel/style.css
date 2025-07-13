@@ -1,0 +1,175 @@
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Wrapper to hold everything with space below for pagination */
+.page-wrapper {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Layout for products and cart items */
+.container,
+.cartContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+/* Product Card Style */
+.cart,
+.userCart {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 15px;
+  width: 279px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
+}
+
+.cart:hover,
+.userCart:hover {
+  transform: scale(1.02);
+}
+
+/* Titles */
+h2, h3 {
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  margin-left: 20px;
+}
+
+/* Paragraph inside cards */
+.cart p,
+.userCart p {
+  font-size: 15px;
+  margin: 6px 0;
+  color: #333;
+}
+
+/* Welcome message */
+#welcome {
+  margin-left: 20px;
+  font-size: 20px;
+  color: #5a2d82;
+}
+
+/* Buttons */
+button {
+  padding: 8px 14px;
+  margin: 6px 4px 0 0;
+  border-radius: 6px;
+  border: 1px solid #764ba2;
+  background-color: white;
+  color: #764ba2;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #764ba2;
+  color: white;
+}
+
+/* Buy Now - Green */
+.userCart button:nth-of-type(3) {
+  background-color: #eaffea;
+  border: 1px solid #28a745;
+  color: #28a745;
+}
+.userCart button:nth-of-type(3):hover {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Cancel Order - Red */
+.userCart button:last-of-type {
+  background-color: #ffeaea;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+.userCart button:last-of-type:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Remove Button - Gray */
+.userCart button:nth-of-type(1) {
+  background-color: #f0f0f0;
+  border: 1px solid #999;
+  color: #555;
+}
+.userCart button:nth-of-type(1):hover {
+  background-color: #999;
+  color: white;
+}
+
+/* Quantity Input */
+.userCart input[type="number"] {
+  width: 60px;
+  padding: 4px;
+  margin-left: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Pagination styling */
+.prevNextBtns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  margin: 30px 0 10px 0;
+}
+
+#previousBtn,
+#nextBtn{
+    width: 100px;
+}
+
+/* Page number */
+.pageno {
+  padding: 6px 14px;
+  background-color: #a87ad6;
+  color: white;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+/* Logout button - like admin panel */
+.topbar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 20px 0 20px;
+  margin-bottom: 0;
+}
+
+#logoutBtn {
+  background: none;
+  color: red;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+#logoutBtn:hover {
+  color: #cc0000;
+}

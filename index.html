@@ -7,8 +7,15 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        form{
+        form {
             display: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 2px;
+            display: block;
         }
     </style>
 </head>
@@ -16,13 +23,22 @@
 <body>
     <button id="signinBtn">Sign in</button>
     <button id="loginBtn">Login</button>
+
     <form id="signinForm" action="">
         <label for="newUsername">Username:</label>
-        <input type="text" id="newUsername" placeholder="Enter your username" required /><br><br>
+        <input type="text" id="newUsername" placeholder="Enter your username" required />
+        <span id="usernameError" class="error"></span>
+        <br><br>
+
         <label for="newEmail">Email:</label>
-        <input type="text" id="newEmail" placeholder="Enter your email" required /><br><br>
+        <input type="text" id="newEmail" placeholder="Enter your email" required />
+        <span id="emailError" class="error"></span>
+        <br><br>
+
         <label for="newPassword">Password:</label>
-        <input type="text" id="newPassword" placeholder="Enter a strong password" required /><br><br>
+        <input type="text" id="newPassword" placeholder="Enter a strong password" required />
+        <span id="passwordError" class="error"></span>
+        <br><br>
 
         <input type="checkbox" id="checkbox">Register as an admin <br><br>
 
@@ -31,16 +47,17 @@
 
     <form id="loginForm">
         <label for="email">Email:</label>
-        <input type="text" id="email" placeholder="Enter your email" required /><br><br>
+        <input type="text" id="email" placeholder="Enter your email" required />
+        <span id="loginEmailError" class="error"></span>
+        <br><br>
+
         <label for="password">Password:</label>
-        <input type="text" id="password" placeholder="Enter password" required /><br><br>
+        <input type="text" id="password" placeholder="Enter password" required />
+        <span id="loginPasswordError" class="error"></span>
+        <br><br>
 
         <button id="login">Log in</button>
     </form>
-
-
-
-
 
     <script src="script.js"></script>
 </body>

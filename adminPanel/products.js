@@ -1,3 +1,5 @@
+// === ADMIN SCRIPT WITH PAGINATION ===
+
 let inputBoxes = document.querySelector(".inputBoxes");
 let name = document.querySelector("#name");
 let quantity = document.querySelector("#quantity");
@@ -5,39 +7,28 @@ let price = document.querySelector("#price");
 let description = document.querySelector("#description");
 let addbtn = document.querySelector("#addbtn");
 let cancelBtn = document.querySelector("#cancelBtn");
-let totalbill = document.querySelector("#totalbill");
 let totalbillMsg = document.querySelector(".totalbillMsg");
 let container = document.querySelector(".container");
 let logout = document.querySelector("#logout");
 
 let array = [];
 let id = 1;
-
 let isInEditMode = false;
-let totalBillMsg = document.createElement("p");
+let itemsPerPage = 10;
+let currentPage = 1;
 
-/*
-totalbill.addEventListener("click", function () {
-    totalbillMsg.appendChild(totalBillMsg);
-    let sum = 0;
-    array.forEach(function (item) {
-        sum += parseInt(item.price) * parseInt(item.quantity);
-    });
-    totalBillMsg.innerText = "Your total payable bill is: " + sum;
-});
-*/
-
-logout.addEventListener("click", function(){
+logout.addEventListener("click", () => {
     window.location.href = "../index.html";
-})
+});
 
-addbtn.addEventListener("click", function () {
+addbtn.addEventListener("click", () => {
     inputBoxes.style.display = 'block';
     cancelBtn.style.display = 'block';
-    cancelBtn.addEventListener("click", function(){
+
+    cancelBtn.onclick = () => {
         inputBoxes.style.display = 'none';
         cancelBtn.style.display = 'none';
-    })
+    };
 
     let nameVal = name.value.trim();
     let quantityVal = parseInt(quantity.value);
@@ -49,25 +40,16 @@ addbtn.addEventListener("click", function () {
     let existingItem = array.find(item => item.name === nameVal);
 
     if (existingItem) {
-        existingItem.quantity = parseInt(existingItem.quantity) + quantityVal;
+        existingItem.quantity += quantityVal;
         existingItem.price = priceVal;
         existingItem.description = descriptionVal;
-
-        existingItem.quantityElement.innerText = "Quantity: " + existingItem.quantity;
-        existingItem.priceElement.innerText = "Price: " + existingItem.price;
-        existingItem.descriptionElement.innerText = "Description: " + existingItem.description;
-
         localStorage.setItem("array", JSON.stringify(array));
-        name.value = "";
-        quantity.value = "";
-        price.value = "";
-        description.value = "";
-
-        // inputBoxes.style.display = 'none';
+        renderPage(currentPage);
+        resetForm();
         return;
     }
 
-    let arrayItems = {
+    let newItem = {
         id: id++,
         name: nameVal,
         quantity: quantityVal,
@@ -77,144 +59,209 @@ addbtn.addEventListener("click", function () {
         liveUserCarts: []
     };
 
-    array.push(arrayItems);
-    addToCart(arrayItems);
+    array.push(newItem);
     localStorage.setItem("array", JSON.stringify(array));
+    renderPage(currentPage);
+    resetForm();
 });
 
-
-function addToCart(arrayItems) {
-    let cart = document.createElement("div");
-    cart.classList.add("flexclass");
-    container.insertBefore(cart, container.firstChild);
-    // container.appendChild(cart);
-
-
-    arrayItems.nameElement = document.createElement("p");
-    arrayItems.nameElement.innerText = "Name: " + arrayItems.name;
-
-    arrayItems.quantityElement = document.createElement("p");
-    arrayItems.quantityElement.innerText = "Quantity: " + arrayItems.quantity;
-
-    arrayItems.priceElement = document.createElement("p");
-    arrayItems.priceElement.innerText = "Price: " + arrayItems.price;
-
-    arrayItems.descriptionElement = document.createElement("p");
-    arrayItems.descriptionElement.innerText = "Description: " + arrayItems.description;
-
-    let pickingMsg = document.createElement("p");
-    pickingMsg.innerText = "Your item is not picked up yet!";
-
-    let itemPicked = document.createElement("input");
-    itemPicked.type = "checkbox";
-    itemPicked.addEventListener("click", function () {
-        arrayItems.isItemPicked = itemPicked.checked ? "yes" : "No";
-        pickingMsg.innerText = itemPicked.checked ? "Hey!Your item is picked up." : "Your item is not picked up yet!";
-        localStorage.setItem("array", JSON.stringify(array));
-    });
-
-    let modifyBtn = document.createElement("button");
-    modifyBtn.innerText = "Edit";
-    modifyBtn.addEventListener("click", function () {
-        if (modifyBtn.innerText === "Edit") {
-            if (isInEditMode) return;
-            isInEditMode = true;
-
-            arrayItems.nameInput = document.createElement("input");
-            arrayItems.nameInput.innerHTML = "Name:";
-            arrayItems.nameInput.value = arrayItems.name;
-
-            arrayItems.quantityInput = document.createElement("input");
-            arrayItems.quantityInput.value = arrayItems.quantity;
-
-            arrayItems.priceInput = document.createElement("input");
-            arrayItems.priceInput.value = arrayItems.price;
-
-            arrayItems.descriptionInput = document.createElement("input");
-            arrayItems.descriptionInput.value = arrayItems.description;
-
-            cart.replaceChild(arrayItems.nameInput, arrayItems.nameElement);
-            cart.replaceChild(arrayItems.quantityInput, arrayItems.quantityElement);
-            cart.replaceChild(arrayItems.priceInput, arrayItems.priceElement);
-            cart.replaceChild(arrayItems.descriptionInput, arrayItems.descriptionElement);
-
-            modifyBtn.innerText = "Save";
-        } else {
-            let newName = arrayItems.nameInput.value.trim();
-            let oldMsg = cart.querySelector(".duplicate-msg");
-            if (oldMsg) oldMsg.remove();
-            let duplicate = array.find(item => item.name === newName && item.id !== arrayItems.id);
-            if (duplicate) {
-                let msg = document.createElement("p");
-                msg.classList.add("duplicate-msg");
-                msg.innerText = "This name already exists! Try a different name.";
-                cart.appendChild(msg);
-                return;
-            }
-
-
-            arrayItems.name = newName;
-            arrayItems.quantity = arrayItems.quantityInput.value;
-            arrayItems.price = arrayItems.priceInput.value;
-            arrayItems.description = arrayItems.descriptionInput.value;
-
-            arrayItems.nameElement.innerText = "Name: " + arrayItems.name;
-            arrayItems.quantityElement.innerText = "Quantity: " + arrayItems.quantity;
-            arrayItems.priceElement.innerText = "Price: " + arrayItems.price;
-            arrayItems.descriptionElement.innerText = "Description: " + arrayItems.description;
-
-            cart.replaceChild(arrayItems.nameElement, arrayItems.nameInput);
-            cart.replaceChild(arrayItems.quantityElement, arrayItems.quantityInput);
-            cart.replaceChild(arrayItems.priceElement, arrayItems.priceInput);
-            cart.replaceChild(arrayItems.descriptionElement, arrayItems.descriptionInput);
-
-            modifyBtn.innerText = "Edit";
-            isInEditMode = false;
-
-            localStorage.setItem("array", JSON.stringify(array));
-        }
-    });
-
-    let del = document.createElement("button");
-    del.innerText = "Delete";
-    del.addEventListener("click", function () {
-        cart.remove();
-        array = array.filter(item => item.id !== arrayItems.id);
-        localStorage.setItem("array", JSON.stringify(array));
-    });
-
-    let billMsg = document.createElement("p");
-    let billBtn = document.createElement("button");
-    billBtn.innerText = "Bill";
-    billBtn.addEventListener("click", function () {
-        let billIs = parseInt(arrayItems.price) * parseInt(arrayItems.quantity);
-        billMsg.innerText = `Your bill for ${arrayItems.name} is: ${billIs}`;
-    });
-
-    cart.appendChild(arrayItems.nameElement);
-    cart.appendChild(arrayItems.quantityElement);
-    cart.appendChild(arrayItems.priceElement);
-    cart.appendChild(arrayItems.descriptionElement);
-    // cart.appendChild(pickingMsg);
-    // cart.appendChild(itemPicked);
-    cart.appendChild(modifyBtn);
-    cart.appendChild(del);
-    // cart.appendChild(billBtn);
-    // cart.appendChild(billMsg);
-
+function resetForm() {
     name.value = "";
     quantity.value = "";
     price.value = "";
     description.value = "";
 }
 
+function renderPage(page) {
+    container.innerHTML = "";
+    const start = (page - 1) * itemsPerPage;
+    const end = page * itemsPerPage;
+    array.slice(start, end).forEach(item => createCard(item));
+    renderPagination();
+}
+
+function renderPagination() {
+    let paginationContainer = document.querySelector("#pagination");
+    if (!paginationContainer) {
+        paginationContainer = document.createElement("div");
+        paginationContainer.id = "pagination";
+        container.after(paginationContainer);
+    }
+
+    paginationContainer.innerHTML = "";
+    const totalPages = Math.ceil(array.length / itemsPerPage);
+
+    if (totalPages <= 1) return;
+
+    if (currentPage > 1) {
+        let prevBtn = document.createElement("button");
+        prevBtn.innerText = "Previous";
+        prevBtn.onclick = () => {
+            currentPage--;
+            renderPage(currentPage);
+        };
+        paginationContainer.appendChild(prevBtn);
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+    const pageBtn = document.createElement("button");
+    pageBtn.innerText = i;
+
+    if (i === currentPage) {
+        pageBtn.classList.add("active-page");
+    }
+
+    pageBtn.onclick = () => {
+        currentPage = i;
+        renderPage(currentPage);
+    };
+
+    paginationContainer.appendChild(pageBtn);
+}
+
+
+    if (currentPage < totalPages) {
+        let nextBtn = document.createElement("button");
+        nextBtn.innerText = "Next";
+        nextBtn.onclick = () => {
+            currentPage++;
+            renderPage(currentPage);
+        };
+        paginationContainer.appendChild(nextBtn);
+    }
+}
+
+function createCard(item) {
+    let cart = document.createElement("div");
+    cart.classList.add("flexclass");
+
+    item.nameElement = document.createElement("p");
+    item.nameElement.innerText = "Name: " + item.name;
+
+    item.quantityElement = document.createElement("p");
+    item.quantityElement.innerText = "Quantity: " + item.quantity;
+
+    item.priceElement = document.createElement("p");
+    item.priceElement.innerText = "Price: " + item.price;
+
+    item.descriptionElement = document.createElement("p");
+    item.descriptionElement.innerText = "Description: " + item.description;
+
+    let modifyBtn = document.createElement("button");
+    modifyBtn.innerText = "Edit";
+
+    modifyBtn.onclick = () => {
+        if (modifyBtn.innerText === "Edit") {
+            if (isInEditMode) return;
+            isInEditMode = true;
+
+            item.nameInput = createInputField("Name", item.name);
+            item.quantityInput = createInputField("Quantity", item.quantity, "number");
+            item.priceInput = createInputField("Price", item.price, "number");
+            item.descriptionInput = createInputField("Description", item.description);
+
+            item.nameWrapper = wrapField("Name:", item.nameInput);
+            item.quantityWrapper = wrapField("Quantity:", item.quantityInput);
+            item.priceWrapper = wrapField("Price:", item.priceInput);
+            item.descriptionWrapper = wrapField("Description:", item.descriptionInput);
+
+            cart.replaceChild(item.nameWrapper, item.nameElement);
+            cart.replaceChild(item.quantityWrapper, item.quantityElement);
+            cart.replaceChild(item.priceWrapper, item.priceElement);
+            cart.replaceChild(item.descriptionWrapper, item.descriptionElement);
+
+            modifyBtn.innerText = "Save";
+        } else {
+            let newName = item.nameInput.value.trim();
+            let duplicate = array.find(el => el.name === newName && el.id !== item.id);
+            cart.querySelector(".duplicate-msg")?.remove();
+            if (duplicate) {
+                let msg = document.createElement("p");
+                msg.innerText = "This name already exists! Try another.";
+                msg.classList.add("duplicate-msg");
+                msg.style.color = "red";
+                cart.appendChild(msg);
+                return;
+            }
+
+            item.name = newName;
+            item.quantity = item.quantityInput.value;
+            item.price = item.priceInput.value;
+            item.description = item.descriptionInput.value;
+
+            item.nameElement.innerText = "Name: " + item.name;
+            item.quantityElement.innerText = "Quantity: " + item.quantity;
+            item.priceElement.innerText = "Price: " + item.price;
+            item.descriptionElement.innerText = "Description: " + item.description;
+
+            cart.replaceChild(item.nameElement, item.nameWrapper);
+            cart.replaceChild(item.quantityElement, item.quantityWrapper);
+            cart.replaceChild(item.priceElement, item.priceWrapper);
+            cart.replaceChild(item.descriptionElement, item.descriptionWrapper);
+
+            modifyBtn.innerText = "Edit";
+            isInEditMode = false;
+
+            localStorage.setItem("array", JSON.stringify(array));
+        }
+    };
+
+    let del = document.createElement("button");
+    del.innerText = "Delete";
+    del.classList.add("delete-button");
+    del.onclick = () => {
+        array = array.filter(el => el.id !== item.id);
+        localStorage.setItem("array", JSON.stringify(array));
+        renderPage(currentPage > 1 && (currentPage - 1) * itemsPerPage >= array.length ? currentPage - 1 : currentPage);
+    };
+
+    cart.appendChild(item.nameElement);
+    cart.appendChild(item.quantityElement);
+    cart.appendChild(item.priceElement);
+    cart.appendChild(item.descriptionElement);
+    cart.appendChild(modifyBtn);
+    cart.appendChild(del);
+    container.appendChild(cart);
+}
+
+function createInputField(placeholder, value, type = "text") {
+    let input = document.createElement("input");
+    input.type = type;
+    input.value = value;
+    input.style.width = "150px";
+    return input;
+}
+
+function wrapField(labelText, inputElement) {
+    let wrapper = document.createElement("div");
+    wrapper.style.marginBottom = "10px";
+    let label = document.createElement("label");
+    label.innerText = labelText;
+    label.style.display = "block";
+    wrapper.appendChild(label);
+    wrapper.appendChild(inputElement);
+    return wrapper;
+}
+
 function loadStorage() {
     array = JSON.parse(localStorage.getItem("array")) || [];
     if (array.length > 0) {
-        const maxId = Math.max(...array.map(item => item.id));
-        id = maxId + 1;
+        id = Math.max(...array.map(item => item.id)) + 1;
     }
-    array.forEach(addToCart);
+    renderPage(currentPage);
 }
 
 loadStorage();
+
+
+// Prevent multi login
+window.addEventListener("storage", (e) => {
+  if (e.key === "liveUser" && e.newValue === null) {
+    window.location.href = "/";
+  }
+
+  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+    location.reload(); 
+  }
+});
+

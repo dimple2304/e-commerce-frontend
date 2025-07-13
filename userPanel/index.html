@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
+    <!-- <style>
         .container,
         .cartContainer {
             display: grid;
@@ -28,24 +28,30 @@
             flex-wrap: wrap;
             column-gap: 10px;
         }
-    </style>
+    </style> -->
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <button id="logoutBtn">Logout</button>
-    <h2 id="welcome"></h2>
 
-    <h3>Products</h3>
-    <div class="container" id="userContainer"></div><br><br>
-
-    <div class="prevNextBtns">
-        <button id="previousBtn">Prevoius</button>
-        <p class="pageno"></p>
-        <button id="nextBtn">Next</button>
+    <div class="topbar">
+        <button id="logoutBtn">Logout</button>
     </div>
+    <div class="page-wrapper">
+        <h2 id="welcome"></h2>
 
-    <h2 id="myCartHeading">My cart:</h2>
-    <div class="cartContainer"></div>
+        <h3>Products</h3>
+        <div class="container" id="userContainer"></div><br><br>
+
+        <div class="prevNextBtns">
+            <button id="previousBtn">Prevoius</button>
+            <p class="pageno"></p>
+            <button id="nextBtn">Next</button>
+        </div>
+
+        <h2 id="myCartHeading">My cart:</h2>
+        <div class="cartContainer"></div>
+    </div>
 
 
     <script src="user.js"></script>
