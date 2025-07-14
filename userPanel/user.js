@@ -8,7 +8,7 @@ let previousBtn = document.querySelector("#previousBtn");
 
 let productsFromAdmin = JSON.parse(localStorage.getItem("array")) || [];
 // let details = JSON.parse(localStorage.getItem("details")) || [];
-let liveUser = JSON.parse(localStorage.getItem("liveUser"));
+let liveUser = JSON.parse(sessionStorage.getItem("liveUser"));
 
 if (!liveUser) {
     window.location.href = "../index.html"; // Redirect to login if not logged in
@@ -30,7 +30,7 @@ let currentPage = 1;
 
 function syncliveUserCartsToDetails() {
   let details = JSON.parse(localStorage.getItem("details")) || [];
-  let currentUser = JSON.parse(localStorage.getItem("liveUser"));
+  let currentUser = JSON.parse(sessionStorage.getItem("liveUser"));
   if (!currentUser) return;
 
   let index = details.findIndex(user => user.id === currentUser.id);
@@ -75,11 +75,11 @@ function renderPaginatedProducts() {
             addToCart.disabled = true;
         }
 
+        let outMsg = document.createElement("p");
         if (item.quantity <= 0) {
-            let outMsg = document.createElement("p");
             outMsg.innerText = "Out of stock";
             outMsg.style.color = "red";
-            div.appendChild(outMsg);
+            // div.appendChild(outMsg);
             addToCart.disabled = true;
         }
 
@@ -87,13 +87,13 @@ function renderPaginatedProducts() {
             if (liveUser.liveUserCarts.some(cart => cart.id === item.id)) return;
 
             liveUser.liveUserCarts.push({ ...item });
-            localStorage.setItem("liveUser", JSON.stringify(liveUser));
+            sessionStorage.setItem("liveUser", JSON.stringify(liveUser));
             syncliveUserCartsToDetails();
 
             addToCart.innerText = "Added to cart";
 
             // renderUserCarts();
-            liveUser = JSON.parse(localStorage.getItem("liveUser"));
+            liveUser = JSON.parse(sessionStorage.getItem("liveUser"));
             renderPaginatedProducts();
         });
 
@@ -102,6 +102,7 @@ function renderPaginatedProducts() {
         div.appendChild(price);
         div.appendChild(desc);
         div.appendChild(addToCart);
+        div.appendChild(outMsg);
         container.appendChild(div);
     });
 
@@ -140,6 +141,25 @@ window.onload = () => {
     renderPaginatedProducts();
     // renderUserCarts();
 };
+
+window.addEventListener("storage", (e) => {
+  if (e.key === "array" && e.newValue) {
+    productsFromAdmin = JSON.parse(e.newValue);
+
+    array = productsFromAdmin.map(product => ({
+      id: product.id,
+      name: product.name,
+      quantity: product.quantity,
+      price: product.price,
+      description: product.description
+    }));
+
+    renderPaginatedProducts();
+  }
+});
+
+
+
 
         /*Below commented code is for rendering cart on the same page  */
 // function renderUserCarts() {
@@ -277,14 +297,15 @@ window.onload = () => {
 
 
 
-window.addEventListener("storage", (e) => {
-  if (e.key === "liveUser" && e.newValue === null) {
-    window.location.href = "/";
-  }
+    /*Multi user prevention  */
+// window.addEventListener("storage", (e) => {
+//   if (e.key === "liveUser" && e.newValue === null) {
+//     window.location.href = "/";
+//   }
 
-  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
-    location.reload();
-  }
-});
+//   if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+//     location.reload();
+//   }
+// });
 
 

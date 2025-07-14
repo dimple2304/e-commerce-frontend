@@ -158,7 +158,7 @@ function loginHandler(event) {
                 liveUserCarts: user.liveUserCarts || [], itemsBought: user.itemsBought || []
             };
 
-            localStorage.setItem("liveUser", JSON.stringify(liveUserDetails));
+            sessionStorage.setItem("liveUser", JSON.stringify(liveUserDetails));
             window.location.href = "userPanel/index.html";
         }
     }
@@ -177,7 +177,7 @@ function loadDetailsStorage() {
 loadDetailsStorage();
 
 function loadLiveUserStorage() {
-    liveUser = JSON.parse(localStorage.getItem("liveUser")) || null;
+    liveUser = JSON.parse(sessionStorage.getItem("liveUser")) || null;
     if (details.length > 0) {
         const maxId = Math.max(...details.map(item => item.id));
         id = maxId + 1;
@@ -194,12 +194,12 @@ if (liveUser) {
 }
 
 
-window.addEventListener("storage", (e) => {
-  if (e.key === "liveUser" && e.newValue === null) {
-    window.location.href = "/";
-  }
+// window.addEventListener("storage", (e) => {
+//   if (e.key === "liveUser" && e.newValue === null) {
+//     window.location.href = "/";
+//   }
 
-  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
-    location.reload();
-  }
-});
+//   if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+//     location.reload();
+//   }
+// });

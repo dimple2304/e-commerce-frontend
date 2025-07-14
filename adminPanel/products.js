@@ -10,7 +10,7 @@ let totalbillMsg = document.querySelector(".totalbillMsg");
 let container = document.querySelector(".container");
 let logout = document.querySelector("#logout");
 
-let adminDetail = JSON.parse(localStorage.getItem("liveUser"));
+let adminDetail = JSON.parse(sessionStorage.getItem("liveUser"));
 
 let array = [];
 let id = 1;
@@ -262,13 +262,13 @@ loadStorage();
 
 
 // Prevent multi login
-window.addEventListener("storage", (e) => {
-  if (e.key === "liveUser" && e.newValue === null) {
-    window.location.href = "/";
-  }
+// window.addEventListener("storage", (e) => {
+//   if (e.key === "liveUser" && e.newValue === null) {
+//     window.location.href = "/";
+//   }
 
-  if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
-    location.reload(); 
-  }
-});
+//   if (e.key === "liveUser" && e.oldValue === null && e.newValue !== null) {
+//     location.reload(); 
+//   }
+// });
 

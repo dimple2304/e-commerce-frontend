@@ -48,6 +48,13 @@ body {
   transition: transform 0.3s ease;
 }
 
+.cart{  
+  height: 195px;
+}
+.userCart{
+  height: 272px;
+}
+
 .cart:hover,
 .userCart:hover {
   transform: scale(1.02);
