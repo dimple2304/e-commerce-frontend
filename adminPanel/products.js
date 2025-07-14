@@ -1,5 +1,3 @@
-// === ADMIN SCRIPT WITH PAGINATION ===
-
 let inputBoxes = document.querySelector(".inputBoxes");
 let name = document.querySelector("#name");
 let quantity = document.querySelector("#quantity");
