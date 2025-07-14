@@ -1,3 +1,4 @@
+let welcomeMessage = document.querySelector(".welcome");
 let inputBoxes = document.querySelector(".inputBoxes");
 let name = document.querySelector("#name");
 let quantity = document.querySelector("#quantity");
@@ -9,6 +10,8 @@ let totalbillMsg = document.querySelector(".totalbillMsg");
 let container = document.querySelector(".container");
 let logout = document.querySelector("#logout");
 
+let adminDetail = JSON.parse(localStorage.getItem("liveUser"));
+
 let array = [];
 let id = 1;
 let isInEditMode = false;
@@ -18,6 +21,10 @@ let currentPage = 1;
 logout.addEventListener("click", () => {
     window.location.href = "../index.html";
 });
+
+// if(adminDetail){
+//     welcomeMessage.innerHTML = `Welcome ${adminDetail.username}`;
+// }
 
 addbtn.addEventListener("click", () => {
     inputBoxes.style.display = 'block';
@@ -33,7 +40,9 @@ addbtn.addEventListener("click", () => {
     let priceVal = parseInt(price.value);
     let descriptionVal = description.value;
 
-    if (!nameVal || !quantityVal || !priceVal || !descriptionVal) return;
+    if (!nameVal || !quantityVal || !priceVal || !descriptionVal){
+        return;
+    }
 
     let existingItem = array.find(item => item.name === nameVal);
 
@@ -53,8 +62,8 @@ addbtn.addEventListener("click", () => {
         quantity: quantityVal,
         price: priceVal,
         description: descriptionVal,
-        isItemPicked: "No",
-        liveUserCarts: []
+        // isItemPicked: "No",
+        // liveUserCarts: []
     };
 
     array.push(newItem);

@@ -2,59 +2,40 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <!-- <style>
-        .container,
-        .cartContainer {
-            display: grid;
-            grid-template-columns: auto auto auto auto auto;
-            column-gap: 10px;
-            margin: 20px;
-        }
-
-        .cart,
-        .userCart {
-            border: 2px dashed blue;
-            padding: 10px;
-            margin-bottom: 10px;
-            width: 240px;
-        }
-
-        .prevNextBtns {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            column-gap: 10px;
-        }
-    </style> -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Panel</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-
+  <div class="page-wrapper">
     <div class="topbar">
-        <button id="logoutBtn">Logout</button>
-    </div>
-    <div class="page-wrapper">
-        <h2 id="welcome"></h2>
-
-        <h3>Products</h3>
-        <div class="container" id="userContainer"></div><br><br>
-
-        <div class="prevNextBtns">
-            <button id="previousBtn">Prevoius</button>
-            <p class="pageno"></p>
-            <button id="nextBtn">Next</button>
-        </div>
-
-        <h2 id="myCartHeading">My cart:</h2>
-        <div class="cartContainer"></div>
+      <button id="logoutBtn">Logout</button>
     </div>
 
+    <div class="content-area">
+      <h2 id="welcome"></h2>
+      <h3>Ready, Set, Shop!</h3>
 
-    <script src="user.js"></script>
+      <!-- View Cart Link -->
+      <div style="margin-left: 20px; margin-bottom: 10px;">
+        <a href="cart.html" class="viewCartLink" style="font-size: 20px; font-weight: bold; color: #5a2d82;">
+          View Cart ⭢
+        </a>
+      </div>
+
+      <div class="container" id="userContainer"></div>
+    </div>
+
+    <div class="prevNextBtns">
+      <button id="previousBtn">Previous</button>
+      <span class="pageno">1</span>
+      <button id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <script src="user.js"></script>
 </body>
 
 </html>

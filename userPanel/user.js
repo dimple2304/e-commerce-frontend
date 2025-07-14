@@ -28,18 +28,19 @@ let array = [];
 const itemsPerPage = 10;
 let currentPage = 1;
 
-window.onload = () => {
-    array = productsFromAdmin.map(product => ({
-        id: product.id,
-        name: product.name,
-        quantity: product.quantity,
-        price: product.price,
-        description: product.description
-    }));
+function syncliveUserCartsToDetails() {
+  let details = JSON.parse(localStorage.getItem("details")) || [];
+  let currentUser = JSON.parse(localStorage.getItem("liveUser"));
+  if (!currentUser) return;
 
-    renderPaginatedProducts();
-    renderUserCarts();
-};
+  let index = details.findIndex(user => user.id === currentUser.id);
+  if (index !== -1) {
+    details[index].liveUserCarts = currentUser.liveUserCarts;
+    details[index].itemsBought = currentUser.itemsBought;
+    localStorage.setItem("details", JSON.stringify(details));
+  }
+}
+
 
 function renderPaginatedProducts() {
     container.innerHTML = "";
@@ -88,7 +89,11 @@ function renderPaginatedProducts() {
             liveUser.liveUserCarts.push({ ...item });
             localStorage.setItem("liveUser", JSON.stringify(liveUser));
             syncliveUserCartsToDetails();
-            renderUserCarts();
+
+            addToCart.innerText = "Added to cart";
+
+            // renderUserCarts();
+            liveUser = JSON.parse(localStorage.getItem("liveUser"));
             renderPaginatedProducts();
         });
 
@@ -123,138 +128,152 @@ previousBtn.addEventListener("click", () => {
     }
 });
 
-function renderUserCarts() {
-    cartContainer.innerHTML = "";
+window.onload = () => {
+    array = productsFromAdmin.map(product => ({
+        id: product.id,
+        name: product.name,
+        quantity: product.quantity,
+        price: product.price,
+        description: product.description
+    }));
 
-    if (liveUser.liveUserCarts.length === 0) {
-        cartContainer.innerHTML = "Your cart is empty!";
-        return;
-    }
+    renderPaginatedProducts();
+    // renderUserCarts();
+};
 
-    liveUser.liveUserCarts.forEach((cartItem, index) => {
-        const alreadyBought = liveUser.itemsBought.some(b => b.id == cartItem.id);
-        const boughtItem = liveUser.itemsBought.find(b => b.id == cartItem.id);
-        const quantity = alreadyBought ? boughtItem.quantity : 1;
+        /*Below commented code is for rendering cart on the same page  */
+// function renderUserCarts() {
+//     cartContainer.innerHTML = "";
 
-        let userCart = document.createElement("div");
-        userCart.className = "userCart";
+//     if (liveUser.liveUserCarts.length === 0) {
+//         cartContainer.innerHTML = "Your cart is empty!";
+//         return;
+//     }
 
-        let cartItemName = document.createElement("p");
-        cartItemName.innerText = `Name: ${cartItem.name}`;
+//     liveUser.liveUserCarts.forEach((cartItem, index) => {
+//         const alreadyBought = liveUser.itemsBought.some(b => b.id == cartItem.id);
+//         const boughtItem = liveUser.itemsBought.find(b => b.id == cartItem.id);
+//         const quantity = alreadyBought ? boughtItem.quantity : 1;
 
-        let cartItemQtyLabel = document.createElement("span");
-        cartItemQtyLabel.innerText = "Quantity: ";
+//         let userCart = document.createElement("div");
+//         userCart.className = "userCart";
 
-        let cartItemQty = document.createElement("input");
-        cartItemQty.type = "number";
-        cartItemQty.min = 1;
-        let product = array.find(p => p.id === cartItem.id);
-        let maxQty = alreadyBought ? boughtItem.quantity : (product?.quantity || 1);
-        cartItemQty.max = maxQty;
-        cartItemQty.value = quantity;
+//         let cartItemName = document.createElement("p");
+//         cartItemName.innerText = `Name: ${cartItem.name}`;
 
-        let cartItemPrice = document.createElement("p");
-        cartItemPrice.innerText = `Price: $${cartItem.price}`;
+//         let cartItemQtyLabel = document.createElement("span");
+//         cartItemQtyLabel.innerText = "Quantity: ";
 
-        let cartItemDesc = document.createElement("p");
-        cartItemDesc.innerText = `Description: ${cartItem.description}`;
+//         let cartItemQty = document.createElement("input");
+//         cartItemQty.type = "number";
+//         cartItemQty.min = 1;
+//         let product = array.find(p => p.id === cartItem.id);
+//         let maxQty = alreadyBought ? boughtItem.quantity : (product?.quantity || 1);
+//         cartItemQty.max = maxQty;
+//         cartItemQty.value = quantity;
 
-        let buyBtn = document.createElement("button");
-        buyBtn.innerText = alreadyBought ? "Bought" : "Buy now";
+//         let cartItemPrice = document.createElement("p");
+//         cartItemPrice.innerText = `Price: $${cartItem.price}`;
 
-        let billMsg = document.createElement("p");
-        billMsg.innerText = `Bill: $${cartItem.price * quantity}`;
+//         let cartItemDesc = document.createElement("p");
+//         cartItemDesc.innerText = `Description: ${cartItem.description}`;
 
-        if (!alreadyBought) {
-            let removeBtn = document.createElement("button");
-            removeBtn.innerText = "Remove";
-            removeBtn.addEventListener("click", () => {
-                liveUser.liveUserCarts.splice(index, 1);
-                localStorage.setItem("liveUser", JSON.stringify(liveUser));
-                syncliveUserCartsToDetails();
-                renderUserCarts();
-                renderPaginatedProducts();
-            });
-            userCart.appendChild(removeBtn);
-        }
+//         let buyBtn = document.createElement("button");
+//         buyBtn.innerText = alreadyBought ? "Bought" : "Buy now";
 
-        if (alreadyBought) {
-            cartItemQty.disabled = true;
-        }
+//         let billMsg = document.createElement("p");
+//         billMsg.innerText = `Bill: $${cartItem.price * quantity}`;
 
-        buyBtn.addEventListener("click", () => {
-            if (alreadyBought) return;
+//         if (!alreadyBought) {
+//             let removeBtn = document.createElement("button");
+//             removeBtn.innerText = "Remove";
+//             removeBtn.addEventListener("click", () => {
+//                 liveUser.liveUserCarts.splice(index, 1);
+//                 localStorage.setItem("liveUser", JSON.stringify(liveUser));
+//                 syncliveUserCartsToDetails();
+//                 renderUserCarts();
+//                 renderPaginatedProducts();
+//             });
+//             userCart.appendChild(removeBtn);
+//         }
 
-            const finalQty = Number(cartItemQty.value);
-            liveUser.itemsBought.push({
-                ...cartItem,
-                quantity: finalQty,
-                bill: finalQty * cartItem.price
-            });
+//         if (alreadyBought) {
+//             cartItemQty.disabled = true;
+//         }
 
-            if (product) {
-                product.quantity -= finalQty;
-            }
+//         buyBtn.addEventListener("click", () => {
+//             if (alreadyBought) return;
 
-            localStorage.setItem("liveUser", JSON.stringify(liveUser));
-            localStorage.setItem("array", JSON.stringify(array));
-            syncliveUserCartsToDetails();
-            renderPaginatedProducts();
-            renderUserCarts();
-        });
+//             const finalQty = Number(cartItemQty.value);
+//             liveUser.itemsBought.push({
+//                 ...cartItem,
+//                 quantity: finalQty,
+//                 bill: finalQty * cartItem.price
+//             });
 
-        let cancelBtn = document.createElement("button");
-        cancelBtn.innerText = "Cancel order";
-        cancelBtn.addEventListener("click", () => {
-            const idx = liveUser.itemsBought.findIndex(b => b.id === cartItem.id);
-            if (idx !== -1) {
-                const qty = liveUser.itemsBought[idx].quantity;
-                const product = array.find(p => p.id === cartItem.id);
-                if (product) product.quantity += qty;
+//             if (product) {
+//                 product.quantity -= finalQty;
+//             }
 
-                liveUser.itemsBought.splice(idx, 1);
-                localStorage.setItem("liveUser", JSON.stringify(liveUser));
-                localStorage.setItem("array", JSON.stringify(array));
-                syncliveUserCartsToDetails();
-                renderPaginatedProducts();
-                renderUserCarts();
-            }
-        });
+//             localStorage.setItem("liveUser", JSON.stringify(liveUser));
+//             localStorage.setItem("array", JSON.stringify(array));
+//             syncliveUserCartsToDetails();
+//             renderPaginatedProducts();
+//             renderUserCarts();
+//         });
 
-        cartItemQty.addEventListener("input", () => {
-            let qty = Number(cartItemQty.value);
-            if (qty > maxQty) {
-                qty = maxQty;
-                cartItemQty.value = maxQty;
-            }
-            billMsg.innerText = `Bill: $${cartItem.price * qty}`;
-        });
+//         let cancelBtn = document.createElement("button");
+//         cancelBtn.innerText = "Cancel order";
+//         cancelBtn.addEventListener("click", () => {
+//             const idx = liveUser.itemsBought.findIndex(b => b.id === cartItem.id);
+//             if (idx !== -1) {
+//                 const qty = liveUser.itemsBought[idx].quantity;
+//                 const product = array.find(p => p.id === cartItem.id);
+//                 if (product) product.quantity += qty;
 
-        userCart.appendChild(cartItemName);
-        userCart.appendChild(cartItemQtyLabel);
-        userCart.appendChild(cartItemQty);
-        userCart.appendChild(cartItemPrice);
-        userCart.appendChild(cartItemDesc);
-        userCart.appendChild(buyBtn);
-        userCart.appendChild(billMsg);
+//                 liveUser.itemsBought.splice(idx, 1);
+//                 localStorage.setItem("liveUser", JSON.stringify(liveUser));
+//                 localStorage.setItem("array", JSON.stringify(array));
+//                 syncliveUserCartsToDetails();
+//                 renderPaginatedProducts();
+//                 renderUserCarts();
+//             }
+//         });
 
-        if (alreadyBought) userCart.appendChild(cancelBtn);
-        cartContainer.appendChild(userCart);
-    });
-}
+//         cartItemQty.addEventListener("input", () => {
+//             let qty = Number(cartItemQty.value);
+//             if (qty > maxQty) {
+//                 qty = maxQty;
+//                 cartItemQty.value = maxQty;
+//             }
+//             billMsg.innerText = `Bill: $${cartItem.price * qty}`;
+//         });
 
-function syncliveUserCartsToDetails() {
-    let details = JSON.parse(localStorage.getItem("details")) || [];
-    let currentUser = JSON.parse(localStorage.getItem("liveUser"));
-    if (!currentUser) return;
+//         userCart.appendChild(cartItemName);
+//         userCart.appendChild(cartItemQtyLabel);
+//         userCart.appendChild(cartItemQty);
+//         userCart.appendChild(cartItemPrice);
+//         userCart.appendChild(cartItemDesc);
+//         userCart.appendChild(buyBtn);
+//         userCart.appendChild(billMsg);
 
-    let index = details.findIndex(user => user.id === currentUser.id);
-    if (index !== -1) {
-        details[index].liveUserCarts = currentUser.liveUserCarts;
-        details[index].itemsBought = currentUser.itemsBought;
-        localStorage.setItem("details", JSON.stringify(details));
-    }
-}
+//         if (alreadyBought) userCart.appendChild(cancelBtn);
+//         cartContainer.appendChild(userCart);
+//     });
+// }
+
+// function syncliveUserCartsToDetails() {
+//     let details = JSON.parse(localStorage.getItem("details")) || [];
+//     let currentUser = JSON.parse(localStorage.getItem("liveUser"));
+//     if (!currentUser) return;
+
+//     let index = details.findIndex(user => user.id === currentUser.id);
+//     if (index !== -1) {
+//         details[index].liveUserCarts = currentUser.liveUserCarts;
+//         details[index].itemsBought = currentUser.itemsBought;
+//         localStorage.setItem("details", JSON.stringify(details));
+//     }
+// }
 
 
 

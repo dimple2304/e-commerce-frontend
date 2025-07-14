@@ -120,7 +120,7 @@ function loginHandler(event) {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailVal) {
-        loginEmailErrorinnerText = "Email is required!";
+        loginEmailError.innerText = "Email is required!";
         hasError = true;
     } else if (!emailPattern.test(emailVal)) {
         loginEmailError.innerText = "Enter a valid email!";
